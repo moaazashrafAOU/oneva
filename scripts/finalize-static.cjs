@@ -1,7 +1,9 @@
-// Support /catalog/ on static hosts that do not resolve extensionless HTML.
-const fs=require('node:fs');const path=require('node:path');
+const fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'../dist/client');
-if(!fs.existsSync(path.join(root,'catalog.html')))throw Error('Catalog export is missing');
-fs.mkdirSync(path.join(root,'catalog'),{recursive:true});
-fs.copyFileSync(path.join(root,'catalog.html'),path.join(root,'catalog/index.html'));
-console.log('Static catalog directory entry verified.');
+for(const route of ['catalog','about','services','process','contact']){
+ const source=path.join(root,route+'.html');
+ if(!fs.existsSync(source))throw Error(route+' export is missing');
+ fs.mkdirSync(path.join(root,route),{recursive:true});
+ fs.copyFileSync(source,path.join(root,route,'index.html'));
+}
+console.log('All static route entries verified.');
